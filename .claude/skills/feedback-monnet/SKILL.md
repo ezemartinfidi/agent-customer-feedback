@@ -19,9 +19,13 @@ Ejecutá estas tres recopilaciones antes de analizar nada.
 
 1. Usá `slack_search_channels` para encontrar el canal con nombre "monnet-fidi" y obtener su ID
 2. Usá `slack_read_channel` para leer todos los mensajes del canal (pasá el channel ID y `limit: 200`. Si el canal tiene más mensajes, priorizá los más recientes)
-3. Para cada archivo o documento adjunto en los mensajes:
-   - Si tiene `canvas_id`: leelo con `slack_read_canvas`
-   - Si es un archivo (.docx, .pdf, .txt, etc.): buscalo en Google Drive por nombre exacto usando `search_files`. Si lo encontrás, leelo con `read_file_content` o `download_file_content`. Si no está en Drive, omitilo silenciosamente — no lo menciones en el DM.
+3. Para cada archivo o documento adjunto en los mensajes, intentá leerlo en este orden hasta que uno funcione:
+   - **Canvas** (si el mensaje tiene `canvas_id`): usá `slack_read_canvas`
+   - **Google Drive por nombre exacto**: usá `search_files` con el nombre del archivo (ej. `"Dudas Docu Fidi Chile.docx"`). Si lo encontrás, leelo con `read_file_content`; si es binario (xlsx, pdf, docx), probá `download_file_content`.
+   - **Google Drive por nombre sin extensión**: si la búsqueda anterior no da resultados, probá sin la extensión (ej. `"Dudas Docu Fidi Chile"`)
+   - **Google Drive por keywords**: si tampoco, buscá con palabras clave del nombre (ej. `"Dudas Fidi Chile"`)
+   - **WebFetch**: si el mensaje incluye una URL pública al archivo, intentá fetchearla
+   - Si ninguna estrategia funciona, omití el archivo silenciosamente — **nunca lo menciones en el DM**
 4. Si se especificó un número de días como argumento, filtrá los mensajes al analizar: solo considerá los mensajes cuyo timestamp sea posterior a (hoy menos N días).
 
 ### Fuente B — Granola: reuniones con Monnet
