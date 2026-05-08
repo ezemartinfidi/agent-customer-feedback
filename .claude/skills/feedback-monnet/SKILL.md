@@ -19,7 +19,9 @@ Ejecutá estas tres recopilaciones antes de analizar nada.
 
 1. Usá `slack_search_channels` para encontrar el canal con nombre "monnet-fidi" y obtener su ID
 2. Usá `slack_read_channel` para leer todos los mensajes del canal (pasá el channel ID y `limit: 200`. Si el canal tiene más mensajes, priorizá los más recientes)
-3. Si en los mensajes hay canvases o documentos adjuntos, leelos con `slack_read_canvas`
+3. Para cada archivo o documento adjunto en los mensajes:
+   - Si tiene `canvas_id`: leelo con `slack_read_canvas`
+   - Si es un archivo (.docx, .pdf, .txt, etc.): buscalo en Google Drive por nombre exacto usando `search_files`. Si lo encontrás, leelo con `read_file_content` o `download_file_content`. Si no está en Drive, omitilo silenciosamente — no lo menciones en el DM.
 4. Si se especificó un número de días como argumento, filtrá los mensajes al analizar: solo considerá los mensajes cuyo timestamp sea posterior a (hoy menos N días).
 
 ### Fuente B — Granola: reuniones con Monnet
@@ -78,3 +80,4 @@ Si no hay ninguna señal en ninguna categoría, enviá un mensaje simple: `🔍 
 - Omitir categorías que no tengan items
 - Si un item viene de múltiples fuentes, agregar la referencia al final: `(Slack + reunión)`
 - Escribí en español
+- **Nunca incluyas notas técnicas en el DM** (archivos que no se pudieron leer, fuentes sin datos, errores de herramientas — eso queda interno, fuera del mensaje)
