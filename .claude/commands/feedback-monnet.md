@@ -30,7 +30,7 @@ Ejecutá estas tres recopilaciones antes de analizar nada.
 2. Para los primeros 10 threads encontrados, usá `get_thread` para leer el contenido completo
 3. Si hay más de 10 threads, priorizá los más recientes
 
-Si alguna de las fuentes no devuelve resultados, registralo internamente como "sin datos para esta fuente" y continuá con las demás. Contá como "fuente activa" solo las que devolvieron al menos un resultado.
+Si alguna de las fuentes no devuelve resultados, registralo internamente como "sin datos para esta fuente" y continuá con las demás. Contá como "fuente activa" — a los efectos del header del DM — solo las que devolvieron al menos un resultado.
 
 ## Paso 2: Análisis
 
@@ -51,7 +51,7 @@ Con todo el contenido recopilado, hacé UNA pasada de síntesis:
 
 ```
 🔍 *Feedback Monnet — [indicá el período analizado, ej. "todo el historial" o "1–7 may 2026"]*
-_[N] fuentes · [N] señales analizadas_ _(para el conteo de fuentes, contá solo las fuentes que devolvieron al menos un resultado)_
+_[N] fuentes · [N] señales analizadas_
 
 *🐛 Bugs / errores reportados*
 • [descripción concreta del problema, máx 15 palabras]
