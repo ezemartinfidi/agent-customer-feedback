@@ -45,21 +45,22 @@ if ! jq -e '.mcpServers' "$CLAUDE_JSON" > /dev/null 2>&1; then
   echo "$PATCHED" > "$CLAUDE_JSON"
 fi
 
-# ── 5. idempotent MCP merge: Granola ─────────────────────────────────────────
-# Granola is a local MCP server that reads from the Granola desktop app.
-# Docs: https://granola.ai — the MCP server is bundled with the Granola app.
+# ── 5. check MCP integrations ────────────────────────────────────────────────
+# All integrations are configured through Claude Code or Claude.ai and synced
+# automatically. This step checks which ones are present and gives instructions
+# for any that are missing.
 echo ""
-echo "Configuring MCP servers..."
+echo "Checking MCP integrations..."
 
+INTEGRATIONS_OK=true
 GRANOLA_KEY="granola"
 if jq -e --arg k "$GRANOLA_KEY" '.mcpServers | has($k)' "$CLAUDE_JSON" > /dev/null 2>&1; then
-  ok "Granola MCP already configured — skipped"
+  ok "Granola MCP already configured"
 else
-  PATCHED=$(jq --arg k "$GRANOLA_KEY" \
-    '.mcpServers[$k] = {"command": "npx", "args": ["-y", "@granola-ai/mcp"]}' \
-    "$CLAUDE_JSON")
-  echo "$PATCHED" > "$CLAUDE_JSON"
-  ok "Added Granola MCP to $CLAUDE_JSON"
+  warn "Granola MCP not found in $CLAUDE_JSON"
+  echo "       → Enable it via Claude Code: Settings → Integrations → Granola"
+  echo "       → Requires Granola desktop app: https://granola.ai"
+  INTEGRATIONS_OK=false
 fi
 
 # ── 6. check claude.ai integrations ──────────────────────────────────────────
@@ -68,8 +69,6 @@ fi
 # checks whether they are already present.
 echo ""
 echo "Checking Claude.ai integrations..."
-
-INTEGRATIONS_OK=true
 
 check_integration() {
   local label="$1"

@@ -40,7 +40,7 @@ Los clientes se descubren automáticamente desde los canales Slack Connect de tu
 ## Instalación
 
 ```bash
-git clone https://github.com/fidimoney/agent-customer-feedback.git
+git clone https://github.com/ezemartinfidi/agent-customer-feedback.git
 cd agent-customer-feedback
 bash setup.sh
 ```
@@ -75,11 +75,13 @@ Sin argumentos analiza todo el historial disponible.
 
 ### Primera vez: verificar conexiones
 
+Después de `bash setup.sh`, abrí Claude Code y ejecutá:
+
 ```
 /fidi-setup
 ```
 
-Este wizard ejecuta `setup.sh` y luego verifica que cada integración responda correctamente antes de tu primer análisis.
+`setup.sh` configura los archivos en tu sistema. `/fidi-setup` verifica que cada integración responde correctamente desde Claude Code — es el paso de validación antes de tu primer análisis.
 
 ## Fuentes de datos
 
