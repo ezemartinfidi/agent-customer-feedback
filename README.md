@@ -57,13 +57,36 @@ Para activar las integraciones de Claude.ai que no estén configuradas:
 
 ## Uso
 
+El agente funciona desde **dos entornos**: la app de escritorio/CLI de Claude Code y la web app en [claude.ai/code](https://claude.ai/code).
+
+### Opción A — CLI o app de escritorio (recomendado)
+
+Requiere haber corrido `bash setup.sh` al menos una vez.
+
 Abrí Claude Code en cualquier directorio y ejecutá:
 
 ```
 /feedback-clientes
 ```
 
-Argumentos opcionales:
+La configuración se lee automáticamente desde `~/.fidi-feedback/config.json`.
+
+### Opción B — Web app (claude.ai/code)
+
+No requiere instalación local. Abrí [claude.ai/code](https://claude.ai/code), asegurate de tener las integraciones de Slack, Gmail, Google Drive, Notion y Granola activas, y ejecutá:
+
+```
+/feedback-clientes
+```
+
+El agente te va a pedir los tres datos de configuración directamente en el chat:
+- **Company name** (ej. `acme`)
+- **Slack user ID** (empieza con `U`, lo encontrás en tu perfil → Más → Copiar ID de miembro)
+- **Slack email**
+
+> Para no tener que ingresarlos de nuevo en futuras sesiones, podés clonar el repo y correr `bash setup.sh` una vez desde tu máquina.
+
+### Argumentos opcionales
 
 | Argumento | Descripción | Ejemplo |
 |---|---|---|
@@ -73,7 +96,7 @@ Argumentos opcionales:
 
 Sin argumentos analiza todo el historial disponible.
 
-### Primera vez: verificar conexiones
+### Primera vez (Opción A): verificar conexiones
 
 Después de `bash setup.sh`, abrí Claude Code y ejecutá:
 
