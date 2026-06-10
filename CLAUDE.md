@@ -1,19 +1,50 @@
+# agent-customer-feedback — Claude Code context
 
-## Skill routing
+## Project overview
 
-When the user's request matches an available skill, invoke it via the Skill tool. When in doubt, invoke the skill.
+This repo contains two Claude Code skills:
+- `/feedback-clientes` — collects customer feedback from Slack Connect, Granola, Gmail, Notion and sends a DM summary
+- `/fidi-setup` — setup wizard that runs `setup.sh` and verifies each MCP integration
 
-Key routing rules:
-- Product ideas/brainstorming → invoke /office-hours
-- Strategy/scope → invoke /plan-ceo-review
-- Architecture → invoke /plan-eng-review
-- Design system/plan review → invoke /design-consultation or /plan-design-review
-- Full review pipeline → invoke /autoplan
-- Bugs/errors → invoke /investigate
-- QA/testing site behavior → invoke /qa or /qa-only
-- Code review/diff check → invoke /review
-- Visual polish → invoke /design-review
-- Ship/deploy/PR → invoke /ship or /land-and-deploy
-- Save progress → invoke /context-save
-- Resume context → invoke /context-restore
-- Author a backlog-ready spec/issue → invoke /spec
+Skills live in `.claude/skills/[skill-name]/SKILL.md`. They are markdown prompt files — no build step, no runtime.
+
+## Key files
+
+| File | Purpose |
+|---|---|
+| `setup.sh` | Idempotent bash installer: configures MCPs and saves `~/.fidi-feedback/config.json` |
+| `.claude/skills/feedback-clientes/SKILL.md` | Main agent skill prompt |
+| `.claude/skills/fidi-setup/SKILL.md` | Setup wizard skill prompt |
+| `tests/setup.bats` | bats tests for setup.sh |
+
+## Dev workflow
+
+```bash
+# Test setup.sh
+brew install bats-core
+bats tests/setup.bats
+
+# Edit a skill → test it immediately in Claude Code
+# /feedback-clientes 7 --max-clients 2
+```
+
+## Config file written by setup.sh
+
+`~/.fidi-feedback/config.json` — stored outside the repo, never committed:
+```json
+{
+  "slack_user_id": "U0XXXXXXX",
+  "slack_email": "you@company.com",
+  "company_name": "acme"
+}
+```
+
+## MCP integrations required
+
+| Integration | Key in ~/.claude.json | How to enable |
+|---|---|---|
+| Granola | `granola` | Added automatically by setup.sh |
+| Slack | `plugin:slack:slack` | Claude.ai → Settings → Integrations |
+| Gmail | `claude_ai_Gmail` | Claude.ai → Settings → Integrations |
+| Google Drive | `claude_ai_Google_Drive` | Claude.ai → Settings → Integrations |
+| Notion | `claude_ai_Notion` | Claude.ai → Settings → Integrations |

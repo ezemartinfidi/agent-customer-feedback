@@ -45,22 +45,24 @@ if ! jq -e '.mcpServers' "$CLAUDE_JSON" > /dev/null 2>&1; then
   echo "$PATCHED" > "$CLAUDE_JSON"
 fi
 
-# ── 5. check MCP integrations ────────────────────────────────────────────────
-# All integrations are configured through Claude Code or Claude.ai and synced
-# automatically. This step checks which ones are present and gives instructions
-# for any that are missing.
+# ── 5. idempotent MCP merge: Granola ─────────────────────────────────────────
+# Granola exposes a remote HTTP MCP at https://mcp.granola.ai/mcp.
+# This config has no auth secrets — add it automatically.
+# Requires the Granola desktop app installed: https://granola.ai
 echo ""
 echo "Checking MCP integrations..."
 
 INTEGRATIONS_OK=true
 GRANOLA_KEY="granola"
 if jq -e --arg k "$GRANOLA_KEY" '.mcpServers | has($k)' "$CLAUDE_JSON" > /dev/null 2>&1; then
-  ok "Granola MCP already configured"
+  ok "Granola MCP already configured — skipped"
 else
-  warn "Granola MCP not found in $CLAUDE_JSON"
-  echo "       → Enable it via Claude Code: Settings → Integrations → Granola"
-  echo "       → Requires Granola desktop app: https://granola.ai"
-  INTEGRATIONS_OK=false
+  PATCHED=$(jq --arg k "$GRANOLA_KEY" \
+    '.mcpServers[$k] = {"type": "http", "url": "https://mcp.granola.ai/mcp"}' \
+    "$CLAUDE_JSON")
+  echo "$PATCHED" > "$CLAUDE_JSON"
+  ok "Added Granola MCP to $CLAUDE_JSON"
+  echo "       → Make sure Granola desktop app is installed: https://granola.ai"
 fi
 
 # ── 6. check claude.ai integrations ──────────────────────────────────────────
