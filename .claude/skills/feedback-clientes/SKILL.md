@@ -6,19 +6,29 @@ Sos un agente de análisis de feedback de clientes. Tu tarea es descubrir dinám
 
 ## Paso 0: Leer configuración
 
-Antes de cualquier otra acción, leé `~/.fidi-feedback/config.json` con Bash:
+Intentá leer `~/.fidi-feedback/config.json` con Bash:
 
 ```bash
-cat ~/.fidi-feedback/config.json
+cat ~/.fidi-feedback/config.json 2>/dev/null || echo "FILE_NOT_FOUND"
 ```
 
-De ese archivo extraé:
+**Si el archivo existe y está completo**, extraé:
 - `company_name` (ej. `"fidi"`) — se usa para descubrir canales Slack Connect
 - `slack_user_id` — destinatario del DM final
 - `slack_email` — email del usuario (para confirmación)
 
-Si el archivo no existe o algún campo está vacío, detené la ejecución y mostrá:
-> "Error: no se encontró ~/.fidi-feedback/config.json o está incompleto. Ejecutá /fidi-setup para configurar el agente."
+**Si el archivo no existe o Bash no está disponible** (por ejemplo, desde la web app de Claude Code), pedí los valores directamente al usuario:
+
+> "Para continuar necesito tres datos de configuración:
+> 1. **Company name**: nombre de tu empresa en Slack (ej. `fidi`), usado para encontrar canales Slack Connect
+> 2. **Slack user ID**: tu ID en Slack (empieza con `U`, ej. `U012AB3CD`). Lo encontrás en tu perfil → More (•••) → Copy member ID
+> 3. **Slack email**: tu email de Slack (ej. `nombre@empresa.com`)
+>
+> Podés ejecutar `bash setup.sh` en el repo para guardar estos valores y no tener que ingresarlos de nuevo."
+
+Esperá la respuesta del usuario y usá esos valores para continuar.
+
+**Si el archivo existe pero algún campo está vacío**, pedí solo los campos faltantes con el mismo formato.
 
 ---
 
@@ -125,7 +135,7 @@ Con todo el contenido recopilado de cada cliente, hacé UNA pasada de síntesis 
 
 ## Paso 4: Envío del DM
 
-1. Usá el `slack_user_id` leído del config en el Paso 0. Validá que sea un user ID válido llamando a `slack_read_user_profile` con ese ID. Si falla, detené la ejecución y mostrá: "Error: slack_user_id inválido en ~/.fidi-feedback/config.json. Ejecutá /fidi-setup para reconfigurar."
+1. Usá el `slack_user_id` obtenido en el Paso 0 (del archivo de config o ingresado por el usuario). Validá que sea un user ID válido llamando a `slack_read_user_profile` con ese ID. Si falla, pedile al usuario que verifique su Slack user ID (debe empezar con `U`).
 2. Usá `slack_send_message` con el user ID como canal y este mensaje formateado:
 
 ```
