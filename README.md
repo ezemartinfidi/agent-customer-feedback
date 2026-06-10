@@ -57,34 +57,33 @@ Para activar las integraciones de Claude.ai que no estén configuradas:
 
 ## Uso
 
-El agente funciona desde **dos entornos**: la app de escritorio/CLI de Claude Code y la web app en [claude.ai/code](https://claude.ai/code).
+En ambos casos necesitás clonar el repo y abrirlo en Claude Code para que el comando `/feedback-clientes` esté disponible. La diferencia está en si corrés `setup.sh` o no.
 
-### Opción A — CLI o app de escritorio (recomendado)
+### Opción A — Con setup.sh (recomendado)
 
-Requiere haber corrido `bash setup.sh` al menos una vez.
+```bash
+git clone https://github.com/ezemartinfidi/agent-customer-feedback.git
+cd agent-customer-feedback
+bash setup.sh
+```
 
-Abrí Claude Code en cualquier directorio y ejecutá:
+Abrí Claude Code en ese directorio y ejecutá:
 
 ```
 /feedback-clientes
 ```
 
-La configuración se lee automáticamente desde `~/.fidi-feedback/config.json`.
+La configuración se lee automáticamente. `setup.sh` también agrega el MCP de Granola.
 
-### Opción B — Web app (claude.ai/code)
+### Opción B — Sin setup.sh
 
-No requiere instalación local. Abrí [claude.ai/code](https://claude.ai/code), asegurate de tener las integraciones de Slack, Gmail, Google Drive, Notion y Granola activas, y ejecutá:
+Cloná el repo, abrilo en Claude Code (desktop, CLI o web en [claude.ai/code](https://claude.ai/code)) y ejecutá `/feedback-clientes` directamente. El agente te va a pedir los datos de configuración en el chat:
 
-```
-/feedback-clientes
-```
-
-El agente te va a pedir los tres datos de configuración directamente en el chat:
 - **Company name** (ej. `acme`)
 - **Slack user ID** (empieza con `U`, lo encontrás en tu perfil → Más → Copiar ID de miembro)
 - **Slack email**
 
-> Para no tener que ingresarlos de nuevo en futuras sesiones, podés clonar el repo y correr `bash setup.sh` una vez desde tu máquina.
+> En este modo Granola no está configurado como MCP, así que las reuniones no se incluyen. Para activar Granola corré `bash setup.sh`.
 
 ### Argumentos opcionales
 
