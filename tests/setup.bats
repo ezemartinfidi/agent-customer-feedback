@@ -11,8 +11,8 @@ setup() {
   CLAUDE_JSON="$TEST_HOME/.claude.json"
   CONFIG_FILE="$TEST_HOME/.fidi-feedback/config.json"
 
-  # Pre-fill identity prompts via stdin
-  IDENTITY_INPUT=$'acme\ntest@acme.com\nU0TEST123\n'
+  # Pre-fill identity prompts via stdin (email, user id — company is hardcoded)
+  IDENTITY_INPUT=$'test@acme.com\nU0TEST123\n'
 }
 
 teardown() {
@@ -100,18 +100,18 @@ run_setup() {
   echo '{}' > "$CLAUDE_JSON"
   run_setup
   EMAIL=$(jq -r '.slack_email' "$CONFIG_FILE")
-  UID=$(jq -r '.slack_user_id' "$CONFIG_FILE")
+  USER_ID=$(jq -r '.slack_user_id' "$CONFIG_FILE")
   COMPANY=$(jq -r '.company_name' "$CONFIG_FILE")
   [ "$EMAIL"   = "test@acme.com" ]
-  [ "$UID"     = "U0TEST123" ]
-  [ "$COMPANY" = "acme" ]
+  [ "$USER_ID" = "U0TEST123" ]
+  [ "$COMPANY" = "fidi" ]
 }
 
 @test "second run preserves config when user presses enter (keeps defaults)" {
   echo '{}' > "$CLAUDE_JSON"
   echo "$IDENTITY_INPUT" | bash "$BATS_TEST_DIRNAME/../setup.sh"
   # Second run: press Enter for all prompts (keep existing values)
-  printf '\n\n\n' | bash "$BATS_TEST_DIRNAME/../setup.sh"
+  printf '\n\n' | bash "$BATS_TEST_DIRNAME/../setup.sh"
   EMAIL=$(jq -r '.slack_email' "$CONFIG_FILE")
   [ "$EMAIL" = "test@acme.com" ]
 }

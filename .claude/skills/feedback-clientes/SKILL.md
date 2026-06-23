@@ -6,23 +6,23 @@ Sos un agente de análisis de feedback de clientes. Tu tarea es descubrir dinám
 
 ## Paso 0: Leer configuración
 
-Intentá leer `~/.fidi-feedback/config.json` con Bash:
+El **company name es siempre `fidi`** (el tenant de Slack es fijo) — nunca lo pidas ni lo leas del config; usalo hardcodeado para descubrir los canales Slack Connect.
+
+Lo único que varía por persona es el **Slack user ID** (destinatario del DM final) y el **Slack email** (confirmación). Intentá leerlos de `~/.fidi-feedback/config.json` con Bash:
 
 ```bash
 cat ~/.fidi-feedback/config.json 2>/dev/null || echo "FILE_NOT_FOUND"
 ```
 
 **Si el archivo existe y está completo**, extraé:
-- `company_name` (ej. `"fidi"`) — se usa para descubrir canales Slack Connect
 - `slack_user_id` — destinatario del DM final
 - `slack_email` — email del usuario (para confirmación)
 
-**Si el archivo no existe o Bash no está disponible** (por ejemplo, desde la web app de Claude Code), pedí los valores directamente al usuario:
+**Si el archivo no existe o Bash no está disponible** (por ejemplo, desde la web app de Claude Code), pedí solo estos dos valores al usuario:
 
-> "Para continuar necesito tres datos de configuración:
-> 1. **Company name**: nombre de tu empresa en Slack (ej. `fidi`), usado para encontrar canales Slack Connect
-> 2. **Slack user ID**: tu ID en Slack (empieza con `U`, ej. `U012AB3CD`). Lo encontrás en tu perfil → More (•••) → Copy member ID
-> 3. **Slack email**: tu email de Slack (ej. `nombre@empresa.com`)
+> "Para continuar necesito dos datos de configuración:
+> 1. **Slack user ID**: tu ID en Slack (empieza con `U`, ej. `U012AB3CD`). Lo encontrás en tu perfil → More (•••) → Copy member ID
+> 2. **Slack email**: tu email de Slack (ej. `nombre@empresa.com`)
 >
 > Podés ejecutar `bash setup.sh` en el repo para guardar estos valores y no tener que ingresarlos de nuevo."
 
@@ -44,11 +44,11 @@ Ejemplos válidos: `7`, `7 --max-clients 5`, `--max-clients 3`, (vacío → hist
 
 ## Paso 1: Descubrir canales de clientes (Slack Connect)
 
-Los clientes están conectados vía Slack Connect. Sus canales suelen seguir el patrón `[cliente]-[company_name]` o `[company_name]-[cliente]`.
+Los clientes están conectados vía Slack Connect. Sus canales suelen seguir el patrón `[cliente]-fidi` o `fidi-[cliente]`.
 
-1. Usá `slack_search_channels` con query igual al valor de `company_name` (leído del config) para obtener todos los canales que lo contengan
+1. Usá `slack_search_channels` con query `fidi` para obtener todos los canales que lo contengan
 2. Filtrá para quedarte solo con canales de cliente (Slack Connect):
-   - Incluí: canales con guión en el nombre que sigan el patrón `[algo]-{company_name}` o `{company_name}-[algo]`
+   - Incluí: canales con guión en el nombre que sigan el patrón `[algo]-fidi` o `fidi-[algo]`
    - Excluí: canales puramente internos (como `#general`, `#engineering`, `#random`, canales sin guión, canales con solo miembros del dominio interno)
 3. Para cada canal de cliente encontrado:
    - Extraé el nombre del cliente del nombre del canal (ej. `monnet-fidi` → "Monnet", `banco-galicia-fidi` → "Banco Galicia")

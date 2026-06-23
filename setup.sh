@@ -7,6 +7,9 @@ CLAUDE_JSON="$HOME/.claude.json"
 CONFIG_DIR="$HOME/.fidi-feedback"
 CONFIG_FILE="$CONFIG_DIR/config.json"
 
+# Slack tenant is always Fidi — hardcoded, never prompted.
+COMPANY_NAME="fidi"
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -108,19 +111,9 @@ mkdir -p "$CONFIG_DIR"
 
 EXISTING_EMAIL=""
 EXISTING_USER_ID=""
-EXISTING_COMPANY=""
 if [ -f "$CONFIG_FILE" ]; then
   EXISTING_EMAIL=$(jq -r '.slack_email // empty' "$CONFIG_FILE" 2>/dev/null || true)
   EXISTING_USER_ID=$(jq -r '.slack_user_id // empty' "$CONFIG_FILE" 2>/dev/null || true)
-  EXISTING_COMPANY=$(jq -r '.company_name // empty' "$CONFIG_FILE" 2>/dev/null || true)
-fi
-
-# company_name
-if [ -n "$EXISTING_COMPANY" ]; then
-  read -r -p "  Company name [$EXISTING_COMPANY]: " COMPANY_INPUT
-  COMPANY_NAME="${COMPANY_INPUT:-$EXISTING_COMPANY}"
-else
-  read -r -p "  Company name (used to find Slack Connect channels, e.g. 'acme'): " COMPANY_NAME
 fi
 
 # slack_email

@@ -46,9 +46,10 @@ bash setup.sh
 ```
 
 El script te va a pedir:
-- **Company name**: el nombre de tu empresa tal como aparece en los canales Slack Connect (ej. `acme`, `fidi`)
 - **Tu email de Slack**: para identificarte como destinatario del DM
 - **Tu Slack user ID**: se encuentra en Slack → tu foto de perfil → Ver perfil → Más (•••) → Copiar ID de miembro
+
+> El company name no se pide: el tenant de Slack es siempre `fidi` y está hardcodeado.
 
 Para activar las integraciones de Claude.ai que no estén configuradas:
 1. Abrí [Claude.ai → Settings → Integrations](https://claude.ai/settings?tab=integrations)
@@ -79,7 +80,6 @@ La configuración se lee automáticamente. `setup.sh` también agrega el MCP de 
 
 Cloná el repo, abrilo en Claude Code (desktop, CLI o web en [claude.ai/code](https://claude.ai/code)) y ejecutá `/feedback-clientes` directamente. El agente te va a pedir los datos de configuración en el chat:
 
-- **Company name** (ej. `acme`)
 - **Slack user ID** (empieza con `U`, lo encontrás en tu perfil → Más → Copiar ID de miembro)
 - **Slack email**
 
